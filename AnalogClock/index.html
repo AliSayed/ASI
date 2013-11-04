@@ -8,143 +8,29 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
 
 		<script src="js/raphael-min.js"></script>
+		<script src="js/clock.js"></script>
 		<link rel="stylesheet" href="css/clock.css">
 
-		<script type="text/javascript" charset="utf-8">
-			//global variable for time zone offset
-			var timezoneOffset = 0;
-			window.onload = function() {
-				var r = Raphael("holder", 300, 300), R = 135;
-				var hr, min, sec;
-
-				//set current time zone
-				var d = new Date;
-				timezoneOffset = -(d.getTimezoneOffset() / 60);
-
-				//draw clock
-				setupClock();
-
-				//load hands objs
-				hr = r.image("images/clock_hour.png", 0, 0, 250, 250);
-				min = r.image("images/clock_min.png", 0, 0, 250, 250);
-				sec = r.image("images/clock_sec.png", 0, 0, 250, 250);
-
-				//draw clock
-				function setupClock() {
-					//draw clock face
-					r.image("images/clock_face.png", 0, 0, 300, 300);
-
-					//draw clock dots -------
-					//draw mins/secs dots
-					drawMarks(R, 60, 2, "#111");
-					//draw hours dots
-					drawMarks(R, 12, 4, "#f00");
-					//draw quarters dots
-					drawMarks(R, 4, 6, "#22f");
-				}
-
-				//UPDATE FN(current value,total divisions,clock radius,hand obj)
-				function updateVal(value, total, R, hand) {
-					//calc angle for hand
-					var a = (360 / total * value);
-					hand.transform("t25,25r" + String(a));
-				}
-
-				//draw circles (clock radius,total number of dots,dot size,dot color)
-				function drawMarks(R, total, size, clr) {
-					// circle attr
-					var dotAttr = {
-						fill : clr,
-						stroke : "none"
-					};
-
-					for (var value = 0; value < total; value++) {
-						//calc angle for dot
-						var a = (360 / total * value) * (Math.PI / 180), x = 150 + R * Math.cos(a), y = 150 - R * Math.sin(a);
-						//draw dot
-						r.circle(x, y, size).attr(dotAttr);
-					}
-				}
-
-				//time update fn
-				(function() {
-					//get date
-					var d = new Date;
-					//get date as UTC
-					var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-					//add time zone offset
-					d = new Date(utc + (3600000 * timezoneOffset));
-
-					//call update fn for each hand
-					updateVal(d.getSeconds(), 60, 100, sec);
-					updateVal(d.getMinutes(), 60, 100, min);
-					updateVal(d.getHours() + (d.getMinutes() / 60), 12, 100, hr);
-
-					//set timer every 1 sec
-					setTimeout(arguments.callee, 1000);
-				})();
-			};
+		<script>
+			$(document).ready(function() {
+				$('#clock_0').clock({});
+				$('#clock_1').clock({offset : -4});
+				$('#clock_2').clock({offset : -6});
+			});
 		</script>
 	</head>
 	<body>
-		<!--header-->
-		<div data-role="page" id="main" >
-			<div data-role="header">
-				<h1>Clock</h1>
-			</div>
-			<a href="#dialogPage" data-rel="dialog" data-role="button">Change time zone</a>
-			<div id="holder"></div>
+
+		<div id="clock_0">
+			<div class="holder"></div>
 		</div>
 
-		<!--dialog-->
-		<div data-role="page" data-close-btn="none" id="dialogPage">
-			<div data-role="header">
-				<h2>Set time zone</h2>
-			</div>
-			<div data-role="content">
-				<select id="timezone">
-					<option value="-12">GMT-12	 Eniwetok</option>
-					<option value="-11">GMT-11	 Samoa</option>
-					<option value="-10">GMT-10	 Hawaii</option>
-					<option value="-9">GMT-9	 Alaska</option>
-					<option value="-8">GMT-8	 PST, Pacific US</option>
-					<option value="-7">GMT-7	 MST, Mountain US</option>
-					<option value="-6">GMT-6	 CST, Central US</option>
-					<option value="-5">GMT-5	 EST, Eastern US</option>
-					<option value="-4">GMT-4	 Atlantic, Canada</option>
-					<option value="-3">GMT-3	 Brazilia, Buenos Aries</option>
-					<option value="-2">GMT-2	 Mid-Atlantic</option>
-					<option value="-1">GMT-1	 Cape Verdes</option>
-					<option value="0">GMT	0    Greenwich Mean Time, Dublin</option>
-					<option value="1">GMT+1	 Berlin, Rome</option>
-					<option value="2">GMT+2	 Cairo</option>
-					<option value="3">GMT+3	 Moscow, Kuwait</option>
-					<option value="4">GMT+4	 Abu Dhabi, Muscat</option>
-					<option value="5">GMT+5	 Islamabad, Karachi</option>
-					<option value="6">GMT+6	 Almaty, Dhaka</option>
-					<option value="7">GMT+7	 Bangkok, Jakarta</option>
-					<option value="8">GMT+8	 Hong Kong, Beijing</option>
-					<option value="9">GMT+9	 Tokyo, Osaka</option>
-					<option value="10">GMT+10	 Sydney, Melbourne, Guam</option>
-					<option value="11">GMT+11	 Magadan, Soloman Is.</option>
-					<option value="12">GMT+12	 Fiji, Wellington, Auckland</option>
-				</select>
+		<div id="clock_1">
+			<div class="holder"></div>
+		</div>
 
-				<a href="#" data-role="button" data-rel="back" data-theme="b">Ok</a>
-			</div>
+		<div id="clock_2">
+			<div class="holder"></div>
 		</div>
 	</body>
-
-	<script type='text/javascript'>
-		//on dialog show select current timezone
-		$("#dialogPage").bind("pageshow", function(e, data) {
-			$("#timezone").val(timezoneOffset);
-			$("#timezone").selectmenu('refresh');
-		});
-		
-		//on dialog hide update timezone
-		$("#dialogPage").bind("pagehide", function(e, data) {
-			timezoneOffset = $("#timezone").val();
-		});
-	</script>
 </html>

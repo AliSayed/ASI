@@ -7,9 +7,7 @@ body {
 #holder {
 	height: 300px;
 	width: 300px;
-	left: 50%;
-	
-	margin: 10px 0 0 -150px;
+	margin: 10px 0 0 -10px;
 	position: absolute;
 }
 
