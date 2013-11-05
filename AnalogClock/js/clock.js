@@ -29,7 +29,11 @@
 				//draw clock
 				function setupClock() {
 					//draw clock face
-					r.image("images/clock_face.png", 0, 0, 300, 300);
+					var dotAttr = {
+						fill : "#88f",
+						stroke : "none"
+					};
+					r.circle(150, 150, 150).attr(dotAttr);
 
 					//draw clock dots -------
 					//draw mins/secs dots
@@ -44,7 +48,10 @@
 				function updateVal(value, total, R, hand) {
 					//calc angle for hand
 					var a = (360 / total * value);
-					hand.transform("t25,25r" + String(a));
+					//calc x,y for hand
+					var x = (300 - hand.attr("width")) / 2;
+					var y = (300 - (hand.attr("height") * 2)) / 2;
+					hand.transform("t" + x + "," + y + "r" + a + "," + (hand.attr("width") / 2)  + "," + hand.attr("height"));
 				}
 
 				//draw circles (clock radius,total number of dots,dot size,dot color)
@@ -67,10 +74,13 @@
 					//load images if not loaded before
 					if (init == false) {
 						//load hands objs
-						hr = r.image("images/clock_hour.png", 0, 0, 250, 250);
-						min = r.image("images/clock_min.png", 0, 0, 250, 250);
-						sec = r.image("images/clock_sec.png", 0, 0, 250, 250);
+						hr = r.rect(0,0, 8, 50).attr({fill : "#000",stroke : "fill"});
+						min = r.rect(0,0, 4, 80).attr({fill : "#055",stroke : "fill"});
+						sec = r.rect(0,0,2,120).attr({fill : "#f00",stroke : "fill"});
 
+						//draw clock center over hands
+						r.circle(150, 150, 5).attr({fill : "#88f"});
+						
 						init = true;
 					}
 
